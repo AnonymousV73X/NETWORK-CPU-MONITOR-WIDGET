@@ -12,10 +12,10 @@
 ## What it looks like
 
 ```
-┌─────────────────────────────────────┐
+┌─────────────────────────────────────────────┐
 │  ↑  12.4 Mbps  │  ↓  84.1 Mbps  │  CPU 37%  │
-│     Uplink     │    Downlink     │           │
-└─────────────────────────────────────┘
+│     Uplink     │    Downlink    │           │
+└─────────────────────────────────────────────┘
 ```
 
 A dark pill-shaped overlay that lives at the top of your screen. Draggable. No taskbar entry. No window border.
