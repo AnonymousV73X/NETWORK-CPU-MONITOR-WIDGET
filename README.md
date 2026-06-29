@@ -1,5 +1,6 @@
 # NetWidget
 
+
 > A frameless floating pill widget for Windows that shows real-time CPU load and network throughput — always on top, zero chrome, zero bloat.
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue?style=flat-square)
