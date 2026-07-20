@@ -1,6 +1,6 @@
 {
   "name": "network-cpu-monitor-widget",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Network and CPU monitoring widget",
   "author": "NetWidget",
   "main": "main.js",
