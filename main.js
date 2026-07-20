@@ -181,9 +181,10 @@ ipcMain.on("set-window-position", (event, { x }) => {
   if (nextX < minX) nextX = minX;
   if (nextX > maxX) nextX = maxX;
 
-  pillX = Math.round(nextX);
-  
-  console.log(`[MAIN DRAG] request x: ${x} | final clamped x: ${pillX} | bounds left/right: ${minX}/${maxX}`);
+  const rounded = Math.round(nextX);
+  if (rounded === pillX) return;
+
+  pillX = rounded;
   win.setPosition(pillX, pillY, false);
 });
 
