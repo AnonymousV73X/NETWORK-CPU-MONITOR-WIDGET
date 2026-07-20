@@ -22,6 +22,10 @@
       {
         "from": "stats.py",
         "to": "stats.py"
+      },
+      {
+        "from": "assets/fonts",
+        "to": "assets/fonts"
       }
     ],
     "win": {

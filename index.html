@@ -4,7 +4,14 @@
 <head>
   <meta charset="utf-8">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+    @font-face {
+      font-family: 'Outfit';
+      src: url('assets/fonts/Outfit.ttf') format('truetype-variations'),
+        url('assets/fonts/Outfit.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
 
     *,
     *::before,
@@ -318,12 +325,12 @@
       height: 38px;
       border-radius: 12px;
       background: linear-gradient(145deg, #f3f7fb, #dbe2ea);
-      
+
     }
 
     body.t3 .seg:has(.arrow.up) {
       background: linear-gradient(145deg, #b1fccf, #cdecdc);
-      
+
       padding: 9px 0 8px 10px !important;
       height: 52px !important;
       border: 2px solid #f8f7f6;
@@ -331,7 +338,7 @@
 
     body.t3 .seg:has(.arrow.dn) {
       background: linear-gradient(145deg, #a2cbfd, #cfdef4);
-      
+
       padding: 10px 0 8px 10px !important;
       height: 52px !important;
       border: 2px solid #f8f7f6;
@@ -339,7 +346,7 @@
 
     body.t3 .pill>.seg:nth-child(5) {
       background: linear-gradient(145deg, #f7c384, #fedfb3);
-      
+
       padding: 10px 0 8px 20px !important;
       height: 52px !important;
       border: 2px solid #f8f7f6;
@@ -763,6 +770,8 @@
     // ── drag ───────────────────────────────────────────────────────
     let isDragging = false
     let grabOffsetX = 0
+    let latestScreenX = 0
+    let rafPending = false
 
     pill.addEventListener('pointerdown', (e) => {
       if (e.button !== 0 || e.target.closest('.confirm')) return
@@ -774,7 +783,13 @@
 
     pill.addEventListener('pointermove', (e) => {
       if (!isDragging) return
-      window.api.setWindowPosition({ x: e.screenX - grabOffsetX })
+      latestScreenX = e.screenX
+      if (rafPending) return
+      rafPending = true
+      requestAnimationFrame(() => {
+        rafPending = false
+        if (isDragging) window.api.setWindowPosition({ x: latestScreenX - grabOffsetX })
+      })
     })
 
     const stopDragging = (e) => {

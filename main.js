@@ -156,7 +156,7 @@ ipcMain.handle("do-quit", async () => {
   if (win && !win.isDestroyed() && win.webContents && win.webContents.session) {
     try {
       const p = win.webContents.session.flushStorageData();
-      if (p && typeof p.catch === 'function') {
+      if (p && typeof p.catch === "function") {
         p.catch(() => {});
       }
     } catch (_) {}
@@ -181,9 +181,10 @@ ipcMain.on("set-window-position", (event, { x }) => {
   if (nextX < minX) nextX = minX;
   if (nextX > maxX) nextX = maxX;
 
-  pillX = Math.round(nextX);
-  
-  console.log(`[MAIN DRAG] request x: ${x} | final clamped x: ${pillX} | bounds left/right: ${minX}/${maxX}`);
+  const rounded = Math.round(nextX);
+  if (rounded === pillX) return;
+
+  pillX = rounded;
   win.setPosition(pillX, pillY, false);
 });
 
