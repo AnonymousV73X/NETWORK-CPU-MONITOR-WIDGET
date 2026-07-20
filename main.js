@@ -156,7 +156,7 @@ ipcMain.handle("do-quit", async () => {
   if (win && !win.isDestroyed() && win.webContents && win.webContents.session) {
     try {
       const p = win.webContents.session.flushStorageData();
-      if (p && typeof p.catch === 'function') {
+      if (p && typeof p.catch === "function") {
         p.catch(() => {});
       }
     } catch (_) {}
