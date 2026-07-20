@@ -1,0 +1,44 @@
+{
+  "name": "network-cpu-monitor-widget",
+  "version": "1.0.0",
+  "description": "Network and CPU monitoring widget",
+  "author": "NetWidget",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "systeminformation": "^5.22.11"
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.netwidget.app",
+    "productName": "NetWidget",
+    "extraResources": [
+      {
+        "from": "stats.py",
+        "to": "stats.py"
+      },
+      {
+        "from": "assets/fonts",
+        "to": "assets/fonts"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "NetWidget",
+      "runAfterFinish": true
+    }
+  }
+}

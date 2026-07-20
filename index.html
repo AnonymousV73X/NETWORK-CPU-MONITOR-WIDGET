@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    @font-face {
+      font-family: 'Outfit';
+      src: url('assets/fonts/Outfit.ttf') format('truetype-variations'),
+        url('assets/fonts/Outfit.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      width: 100vw;
+      height: 100vh;
+      background: transparent;
+      overflow: hidden;
+      font-family: 'Outfit', 'Segoe UI', sans-serif;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-app-region: no-drag;
+    }
+
+    body {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      pointer-events: none
+    }
+
+    /* ── base pill layout (no colours) ─────────────────────────── */
+    .pill {
+      position: relative;
+      display: grid;
+      grid-template-columns: 110px 1px 110px 1px 60px;
+      align-items: center;
+      width: 300px;
+      height: 55px;
+      border-radius: 999px;
+      overflow: hidden;
+      pointer-events: auto;
+      cursor: default;
+      padding-left: 15px;
+      margin-top: 2px;
+      transition: background .3s, border .3s, box-shadow .3s;
+    }
+
+    .seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 100%
+    }
+
+    .arrow {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.5;
+      flex-shrink: 0;
+      font-family: Tahoma, Geneva, Verdana, sans-serif;
+      margin-bottom: 9px
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 76px;
+      flex-shrink: 0
+    }
+
+    .valrow {
+      display: flex;
+      align-items: baseline;
+      gap: 3px
+    }
+
+    .val {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01px;
+      font-variant-numeric: tabular-nums
+    }
+
+    .unit {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 1px
+    }
+
+    .lbl {
+      font-size: 10px;
+      letter-spacing: 0.3px;
+      margin-top: 4px
+    }
+
+    .sep {
+      width: 1px;
+      height: 36px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1
+    }
+
+    /* ── THEME 1 — Original dark gradient ──────────────────────── */
+    body.t1 .pill {
+      background: linear-gradient(135deg, #0a2e1a, #0a1232);
+      border: 1px solid rgba(255, 255, 255, .22);
+      backdrop-filter: blur(14px) saturate(1.4);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    }
+
+    body.t1 .pill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .18) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    body.t1 .pill::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      border-radius: 0 0 999px 999px;
+      background: linear-gradient(0deg, rgba(0, 0, 0, .18) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    body.t1 .sep {
+      background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .28), transparent)
+    }
+
+    body.t1 .val {
+      color: rgba(255, 255, 255, .90)
+    }
+
+    body.t1 .unit {
+      color: rgba(255, 255, 255, .48)
+    }
+
+    body.t1 .arrow.up~.info .unit {
+      color: #14a854
+    }
+
+    body.t1 .arrow.dn~.info .unit {
+      color: #1f6fcc
+    }
+
+    body.t1 .pill>.seg:nth-child(5) .unit {
+      color: #cc7a00
+    }
+
+    body.t1 .lbl {
+      color: rgba(255, 255, 255, .55)
+    }
+
+    body.t1 .arrow.up~.info .lbl {
+      color: rgba(30, 207, 104, .75)
+    }
+
+    body.t1 .arrow.dn~.info .lbl {
+      color: rgba(59, 159, 255, .75)
+    }
+
+    body.t1 .pill>.seg:nth-child(5) .lbl {
+      color: rgba(255, 165, 0, .75)
+    }
+
+    body.t1 .up {
+      color: #1ecf68;
+      filter: drop-shadow(0 0 5px rgba(30, 207, 104, .65))
+    }
+
+    body.t1 .dn {
+      color: #3b9fff;
+      filter: drop-shadow(0 0 5px rgba(59, 159, 255, .65))
+    }
+
+    body.t1 #uv {
+      color: #1ecf68
+    }
+
+    body.t1 #dv {
+      color: #3b9fff
+    }
+
+    body.t1 #cv {
+      color: orange
+    }
+
+    /* ── THEME 2 — Glassmorphic ─────────────────────────────────── */
+
+    body.t2 .pill {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .35);
+      backdrop-filter: blur(2px) saturate(2.2) contrast(1.05);
+      -webkit-backdrop-filter: blur(2px) saturate(2.2) contrast(1.05);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(255, 255, 255, .08);
+    }
+
+    body.t2 .pill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 22%;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .28) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    body.t2 .sep {
+      background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .20), transparent)
+    }
+
+    body.t2 .val {
+      color: rgba(255, 255, 255, .95)
+    }
+
+    body.t2 .unit {
+      color: rgba(255, 255, 255, .40)
+    }
+
+    body.t2 .arrow.up~.info .unit {
+      color: #1f9d52
+    }
+
+    body.t2 .arrow.dn~.info .unit {
+      color: #2563c9
+    }
+
+    body.t2 .pill>.seg:nth-child(5) .unit {
+      color: #c2580a
+    }
+
+    body.t2 .lbl {
+      color: rgba(180, 180, 255, .60)
+    }
+
+    body.t2 .arrow.up~.info .lbl {
+      color: rgba(74, 222, 128, .75)
+    }
+
+    body.t2 .arrow.dn~.info .lbl {
+      color: rgba(96, 165, 250, .75)
+    }
+
+    body.t2 .pill>.seg:nth-child(5) .lbl {
+      color: rgba(251, 146, 60, .75)
+    }
+
+    body.t2 .up {
+      color: #4ade80;
+      filter: drop-shadow(0 0 6px rgba(74, 222, 128, .55))
+    }
+
+    body.t2 .dn {
+      color: #60a5fa;
+      filter: drop-shadow(0 0 6px rgba(96, 165, 250, .55))
+    }
+
+    body.t2 #uv {
+      color: #4ade80
+    }
+
+    body.t2 #dv {
+      color: #60a5fa
+    }
+
+    body.t2 #cv {
+      color: #fb923c
+    }
+
+    /* ── THEME 3 — White neumorphic ─────────────────────────────── */
+    body.t3 .pill {
+      grid-template-columns: 102px 4px 102px 4px 66px;
+      width: 320px;
+      height: 90px;
+      padding: 9px 11px 9px 11px;
+      background: transparent;
+      border: none;
+      border-radius: 22px;
+      box-shadow: none;
+      margin-top: -15px;
+      gap: 0px;
+      opacity: 0.75;
+    }
+
+    body.t3 .arrow {
+      font-size: 22px;
+    }
+
+    body.t3 .info {
+      width: 64px;
+    }
+
+    body.t3 .pill>.seg:nth-child(5) {
+      padding-left: 14px !important;
+    }
+
+    body.t3 .seg {
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #f3f7fb, #dbe2ea);
+
+    }
+
+    body.t3 .seg:has(.arrow.up) {
+      background: linear-gradient(145deg, #b1fccf, #cdecdc);
+
+      padding: 9px 0 8px 10px !important;
+      height: 52px !important;
+      border: 2px solid #f8f7f6;
+    }
+
+    body.t3 .seg:has(.arrow.dn) {
+      background: linear-gradient(145deg, #a2cbfd, #cfdef4);
+
+      padding: 10px 0 8px 10px !important;
+      height: 52px !important;
+      border: 2px solid #f8f7f6;
+    }
+
+    body.t3 .pill>.seg:nth-child(5) {
+      background: linear-gradient(145deg, #f7c384, #fedfb3);
+
+      padding: 10px 0 8px 20px !important;
+      height: 52px !important;
+      border: 2px solid #f8f7f6;
+    }
+
+    body.t3 .sep {
+      background: transparent
+    }
+
+    body.t3 .val {
+      color: #2d3748
+    }
+
+    body.t3 .unit {
+      color: #718096
+    }
+
+    body.t3 .arrow.up~.info .unit {
+      color: #0f7a37
+    }
+
+    body.t3 .arrow.dn~.info .unit {
+      color: #1a46ad
+    }
+
+    body.t3 .pill>.seg:nth-child(5) .unit {
+      color: #db7100
+    }
+
+    body.t3 .lbl {
+      color: #a0aec0
+    }
+
+    body.t3 .arrow.up~.info .lbl {
+      color: #16a34a;
+      font-weight: 500;
+    }
+
+    body.t3 .arrow.dn~.info .lbl {
+      color: #2563eb;
+      font-weight: 500;
+
+    }
+
+    body.t3 .pill>.seg:nth-child(5) .lbl {
+      color: #d97706;
+      font-weight: 500;
+    }
+
+    body.t3 .up {
+      color: #16a34a;
+      filter: none
+    }
+
+    body.t3 .dn {
+      color: #2563eb;
+      filter: none
+    }
+
+    body.t3 #uv {
+      color: #16a34a
+    }
+
+    body.t3 #dv {
+      color: #2563eb
+    }
+
+    body.t3 #cv {
+      color: #d77300
+    }
+
+    /* ── THEME 4 — Modern minimal (OLED dark) ───────────────────── */
+    body.t4 .pill {
+      background: #1a1a1ae8;
+      border: 1px solid #454545;
+      height: 52px;
+      width: 290px;
+      padding-left: 12px;
+      padding-bottom: 2px;
+    }
+
+    body.t4 .sep {
+      background: #3c3c3c
+    }
+
+    body.t4 .val {
+      color: #e5e5e5;
+      font-size: 14px
+    }
+
+    body.t4 .unit {
+      color: #555;
+      font-size: 10px
+    }
+
+    body.t4 .arrow.up~.info .unit {
+      color: #009002
+    }
+
+    body.t4 .arrow.dn~.info .unit {
+      color: #3266be
+    }
+
+    body.t4 .pill>.seg:nth-child(5) .unit {
+      color: #b8740a
+    }
+
+    body.t4 .lbl {
+      color: #444;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      font-size: 9px;
+      font-weight: 600;
+    }
+
+    body.t4 .arrow.up~.info .lbl {
+      color: #22c55e
+    }
+
+    body.t4 .arrow.dn~.info .lbl {
+      color: #3b82f6
+    }
+
+    body.t4 .pill>.seg:nth-child(5) .lbl {
+      color: #febb48
+    }
+
+    body.t4 .up {
+      color: #22c55e;
+      filter: none;
+      font-size: 20px
+    }
+
+    body.t4 .dn {
+      color: #3b82f6;
+      filter: none;
+      font-size: 20px
+    }
+
+    body.t4 #uv {
+      color: #49aa65
+    }
+
+    body.t4 #dv {
+      color: #4b85d6
+    }
+
+    body.t4 #cv {
+      color: #fca751c7
+    }
+
+    /* ── confirm tooltip ─────────────────────────────────────────── */
+    .confirm {
+      position: fixed;
+      left: 50%;
+      top: 62px;
+      transform: translateX(-50%);
+      background: rgba(14, 14, 24, .95);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, .13);
+      border-radius: 10px;
+      padding: 8px 10px 8px 14px;
+      z-index: 9999;
+      white-space: nowrap;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .55);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+      font-family: 'Outfit', 'Segoe UI', sans-serif;
+    }
+
+    .confirm.show {
+      display: flex
+    }
+
+    .confirm-txt {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .70)
+    }
+
+    .confirm-yes {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', 'Segoe UI', sans-serif;
+      color: #ff5f57;
+      background: rgba(255, 95, 87, .12);
+      border: 1px solid rgba(255, 95, 87, .30);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer
+    }
+
+    .confirm-yes:hover {
+      background: rgba(255, 95, 87, .24)
+    }
+
+    .confirm-no {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', 'Segoe UI', sans-serif;
+      color: rgba(255, 255, 255, .55);
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer
+    }
+
+    .confirm-no:hover {
+      background: rgba(255, 255, 255, .12)
+    }
+
+    .confirm-reset {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', 'Segoe UI', sans-serif;
+      color: #3b9fff;
+      background: rgba(59, 159, 255, .12);
+      border: 1px solid rgba(59, 159, 255, .30);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer
+    }
+
+    .confirm-reset:hover {
+      background: rgba(59, 159, 255, .24)
+    }
+
+    .confirm-unit {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', 'Segoe UI', sans-serif;
+      color: #c084fc;
+      background: rgba(192, 132, 252, .12);
+      border: 1px solid rgba(192, 132, 252, .30);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer
+    }
+
+    .confirm-unit:hover {
+      background: rgba(192, 132, 252, .24)
+    }
+
+    .confirm-theme {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', 'Segoe UI', sans-serif;
+      color: #34d399;
+      background: rgba(52, 211, 153, .12);
+      border: 1px solid rgba(52, 211, 153, .30);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer
+    }
+
+    .confirm-theme:hover {
+      background: rgba(52, 211, 153, .24)
+    }
+  </style>
+</head>
+
+<body class="t1">
+
+  <div class="pill" id="pill">
+    <div class="seg">
+      <span class="arrow up">↑</span>
+      <div class="info">
+        <div class="valrow">
+          <span class="val" id="uv">0</span>
+          <span class="unit" id="uu">Mbps</span>
+        </div>
+        <span class="lbl">Uplink</span>
+      </div>
+    </div>
+
+    <div class="sep" style="margin-left:-10px"></div>
+
+    <div class="seg">
+      <span class="arrow dn">↓</span>
+      <div class="info">
+        <div class="valrow">
+          <span class="val" id="dv">0</span>
+          <span class="unit" id="du">Mbps</span>
+        </div>
+        <span class="lbl">Downlink</span>
+      </div>
+    </div>
+
+    <div class="sep" style="margin-left:-10px"></div>
+
+    <div class="seg" style="justify-content:flex-start;padding-left:10px;">
+      <div class="info" style="width:44px;">
+        <div class="valrow">
+          <span class="val" id="cv">0</span>
+          <span class="unit">%</span>
+        </div>
+        <span class="lbl">CPU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirm" id="confirm">
+    <span class="confirm-txt">NetWidget</span>
+    <button class="confirm-yes" id="cyes">Exit</button>
+    <button class="confirm-unit" id="cunit">→ B/s</button>
+    <button class="confirm-theme" id="ctheme">Theme</button>
+    <button class="confirm-reset" id="creset">Reset</button>
+    <button class="confirm-no" id="cno">Cancel</button>
+  </div>
+
+  <script>
+    const uvEl = document.getElementById('uv')
+    const uuEl = document.getElementById('uu')
+    const dvEl = document.getElementById('dv')
+    const duEl = document.getElementById('du')
+    const cvEl = document.getElementById('cv')
+
+    // ── theme cycling ──────────────────────────────────────────────
+    const THEMES = ['t1', 't2', 't3', 't4']
+    const THEME_NAMES = ['Dark Gradient', 'Glassmorphic', 'Neumorphic', 'OLED Minimal']
+    let currentTheme = 0
+
+    try {
+      const saved = localStorage.getItem('nw-theme')
+      if (saved !== null) currentTheme = parseInt(saved, 10) % THEMES.length
+    } catch (_) { }
+
+    function applyTheme(idx) {
+      document.body.classList.remove(...THEMES)
+      document.body.classList.add(THEMES[idx])
+      document.getElementById('ctheme').textContent = THEME_NAMES[idx]
+    }
+    applyTheme(currentTheme)
+
+    document.getElementById('ctheme').addEventListener('click', () => {
+      currentTheme = (currentTheme + 1) % THEMES.length
+      applyTheme(currentTheme)
+      try { localStorage.setItem('nw-theme', currentTheme) } catch (_) { }
+    })
+
+    // ── unit toggle ────────────────────────────────────────────────
+    let useBits = true
+
+    function fmt(v) {
+      if (!useBits) v = v / 8
+      const G = useBits ? 'Gbps' : 'GBps'
+      const M = useBits ? 'Mbps' : 'MBps'
+      const K = useBits ? 'Kbps' : 'KBps'
+      if (v >= 1000) return [+(v / 1000).toFixed(1), G]
+      if (v >= 10) return [Math.round(v), M]
+      if (v >= 1) return [+v.toFixed(1), M]
+      return [Math.round(v * 1000), K]
+    }
+
+    let busy = false
+    async function tick() {
+      if (busy) return
+      busy = true
+      try {
+        const s = await window.api.stats()
+        const [uv, uu] = fmt(s.up)
+        const [dv, du] = fmt(s.dn)
+        uvEl.textContent = uv; uuEl.textContent = uu
+        dvEl.textContent = dv; duEl.textContent = du
+        cvEl.textContent = Math.round(s.cpu)
+      } catch (_) { }
+      busy = false
+    }
+    tick()
+    setInterval(tick, 1000)
+
+    // ── confirm tooltip ────────────────────────────────────────────
+    const confirm = document.getElementById('confirm')
+    const pill = document.getElementById('pill')
+    let closeTimer = null
+
+    function showConfirm() {
+      confirm.classList.add('show')
+      window.api.setConfirmStatus(true)
+      clearTimeout(closeTimer)
+      closeTimer = setTimeout(hideConfirm, 4000)
+    }
+
+    function hideConfirm() {
+      confirm.classList.remove('show')
+      window.api.setConfirmStatus(false)
+      clearTimeout(closeTimer)
+    }
+
+    pill.addEventListener('contextmenu', e => { e.preventDefault(); showConfirm() })
+
+    document.getElementById('cyes').addEventListener('click', async () => {
+      hideConfirm()
+      await window.api.quit()
+    })
+
+    document.getElementById('cno').addEventListener('click', () => hideConfirm())
+
+    document.getElementById('cunit').addEventListener('click', () => {
+      useBits = !useBits
+      document.getElementById('cunit').textContent = useBits ? '→ B/s' : '→ b/s'
+    })
+
+    document.getElementById('creset').addEventListener('click', () => {
+      hideConfirm()
+      window.api.resetPosition()
+    })
+
+    document.addEventListener('pointerdown', e => {
+      if (confirm.classList.contains('show') &&
+        !confirm.contains(e.target) &&
+        !pill.contains(e.target)) {
+        hideConfirm()
+      }
+    })
+
+    // ── drag ───────────────────────────────────────────────────────
+    let isDragging = false
+    let grabOffsetX = 0
+
+    pill.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 || e.target.closest('.confirm')) return
+      isDragging = true
+      grabOffsetX = e.clientX
+      pill.setPointerCapture(e.pointerId)
+      window.api.setDragStatus(true)
+    })
+
+    pill.addEventListener('pointermove', (e) => {
+      if (!isDragging) return
+      window.api.setWindowPosition({ x: e.screenX - grabOffsetX })
+    })
+
+    const stopDragging = (e) => {
+      if (isDragging) {
+        try { pill.releasePointerCapture(e.pointerId) } catch (_) { }
+        isDragging = false
+        window.api.setDragStatus(false)
+      }
+    }
+
+    pill.addEventListener('pointerup', stopDragging)
+    pill.addEventListener('pointercancel', stopDragging)
+  </script>
+</body>
+
+</html>
